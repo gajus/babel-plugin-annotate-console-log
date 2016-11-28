@@ -48,6 +48,6 @@ class Foo {
 
 ## Motivation
 
-I find myself often getting lost between many `console.log` messages. The [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) allow you to [filter the `console` output](https://developers.google.com/web/tools/chrome-devtools/console/#filtering_the_console_output). However, you need to manually annotate each `console.log` statement with useful information for filtering.
+I often get lost between many `console.log` messages. The [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) allow you to [filter the `console` output](https://developers.google.com/web/tools/chrome-devtools/console/#filtering_the_console_output). However, you need to manually annotate each `console.log` statement with useful information for filtering.
 
-This plugin enriches every `console.log` statement with information useful for filtering messages.
+This plugin enriches every `console.log` statement with information useful for filtering the messages.
