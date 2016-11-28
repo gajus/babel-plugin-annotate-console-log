@@ -1,7 +1,5 @@
 // @flow
 
-type SeverityCategoryType = 'log' | 'info' | 'warn' | 'error';
-
 export default ({
   types: t
 }: {
