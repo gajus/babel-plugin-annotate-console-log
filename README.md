@@ -46,6 +46,26 @@ class Foo {
 }
 ```
 
+You can also specify `scriptPath` option to add script path info:
+```js
+"plugins": [
+  ["annotate-console-log", {
+    "scriptPath": "relative"
+  }]
+]
+```
+```js
+console.log('apple')
+// =>
+console.log('foo/file.js:3:1', 'foo()', 'apple')
+```
+```js
+"scriptPath": "relative" // => foo/file.js:3:1
+"scriptPath": "filename" // => file.js:3:1
+"scriptPath": "fullpath" // => /home/user/proj/foo/file.js:3:1
+```
+
+
 ## Motivation
 
 I often get lost between many `console.log` messages. The [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) allow you to [filter the `console` output](https://developers.google.com/web/tools/chrome-devtools/console/#filtering_the_console_output). However, you need to manually annotate each `console.log` statement with useful information for filtering.
