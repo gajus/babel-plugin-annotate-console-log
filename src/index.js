@@ -1,4 +1,6 @@
 // @flow
+import Path from 'path';
+import pkgUp from 'pkg-up';
 
 export default ({
   types: t
@@ -61,9 +63,38 @@ export default ({
     throw new Error('Unexpected state.');
   };
 
+  const getScriptPath = (path: Object, state: Object) => {
+    type OptionsType = {
+      scriptPath: 'filename' | 'fullpath' | 'relative'
+    };
+
+    const opts: OptionsType = state.opts;
+    const fullPath = state.file.opts.filename;
+    const basename = Path.basename(fullPath);
+    const basedir = Path.dirname(fullPath);
+    const {column, line} = path.node.loc.start;
+
+    if (opts.scriptPath === 'filename') {
+      if (basename === 'index.js') {
+        return Path.basename(basedir) + '/' + basename + ':' + line + ':' + column;
+      } else {
+        return basename + ':' + line + ':' + column;
+      }
+    } else if (opts.scriptPath === 'fullpath') {
+      return fullPath + ':' + line + ':' + column;
+    } else if (opts.scriptPath === 'relative') {
+      const pkgDir = pkgUp.sync(basedir);
+      const relativePath = Path.relative(Path.dirname(pkgDir), fullPath);
+
+      return relativePath + ':' + line + ':' + column;
+    } else {
+      return null;
+    }
+  };
+
   return {
     visitor: {
-      CallExpression (path: Object) {
+      CallExpression (path: Object, state: Object) {
         const callee = path.node.callee;
 
         if (!t.isMemberExpression(callee)) {
@@ -92,6 +123,14 @@ export default ({
         if (parentFunctionNames.length) {
           path.node.arguments.unshift(
             t.stringLiteral(parentFunctionNames.join(' '))
+          );
+        }
+
+        if (state.opts.scriptPath) {
+          const scriptPath = getScriptPath(path, state);
+
+          path.node.arguments.unshift(
+            t.stringLiteral(scriptPath)
           );
         }
       }
